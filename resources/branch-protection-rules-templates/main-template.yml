@@ -1,0 +1,10 @@
+name: main
+protection:
+  require-pull-request: true
+  approvals: 2
+  dismiss-stale-approvals: true
+  require-approve-from-code-owner: true
+  conversation-resolution-before-merging: true
+  allow_bypassing: false
+  status-checks:
+    require-up-to-date: true

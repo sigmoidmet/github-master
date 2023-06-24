@@ -1,0 +1,2 @@
+default-branch: main
+remove-branch-after-pr: true

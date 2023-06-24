@@ -1,0 +1,4 @@
+default-branch: main
+remove-branch-after-pr: true
+branch-protection-templates:
+  - main-template
