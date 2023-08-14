@@ -1,2 +1,2 @@
 # github-master
-A tool that allows easily creation of a github repositories
+A tool that allows a creation of a github repositories with ease
