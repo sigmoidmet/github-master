@@ -1,20 +1,50 @@
-from github import Github
-from github import Auth
+import webbrowser
+from datetime import datetime
 
-from authentication import get_auth_token_if_exists, put_auth_token
+from arguments_parser import get_parser
+from authentication import AuthenticationService, AuthenticationProvider
+from github_service import GithubService
+
+
+class CommandLineAuthenticationProvider(AuthenticationProvider):
+
+    def __init__(self, authentication_service_arg: AuthenticationService, redirect: bool):
+        self.__authentication_service = authentication_service_arg
+        self.redirect = redirect
+
+    def get_auth_token_if_exists(self):
+        return self.__authentication_service.get_auth_token_if_exists()
+
+    def on_bad_credentials(self) -> str:
+        if self.redirect:
+            self.send_to_auth_page()
+
+        token = input()
+
+        self.__authentication_service.put_auth_token(token)
+
+        return token
+
+    def send_to_auth_page(self):
+        current_month = datetime.now().month
+        current_year = datetime.now().year
+        __url = f"https://github.com/settings/tokens/new?description=github-master-creds-{current_year}-{current_month}&scopes=repo%2Cworkflow"
+        webbrowser.open(__url)
+
 
 if __name__ == "__main__":
-    token = get_auth_token_if_exists()
+    parser = get_parser()
 
-    if not token:
-        print("No authentication provided. Please, write down GitHub auth token with writes accesses to repos and "
-              "workflows.")
-        token = input()
-        put_auth_token(token)
+    args = parser.parse_args()
 
-    auth = Auth.Token(token)
-    g = Github(auth=auth)
-    user = g.get_user()
-    repo_name = "test-repo"
-    repo = user.create_repo(repo_name)
-    print(f"Repository {repo_name} successfully created.")
+    if args.command == 'create' and args.repositoryName is None:
+        parser.error("You need to provide repositoryName argument to create it")
+
+    authentication_service = AuthenticationService()
+    githubService = GithubService(CommandLineAuthenticationProvider(authentication_service, not args.noRedirect))
+
+    if args.command == 'create':
+        githubService.create_repository(args.repositoryName)
+        print(f"Repository {args.repositoryName} successfully created.")
+    else:
+        print("Sorry, we don't support this yet")

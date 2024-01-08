@@ -1,0 +1,15 @@
+description: "A tool that allows the creation of a GitHub repositories with ease"
+
+positional:
+  - name: command
+    argn: "?"
+    help: "Command to execute: create or auth"
+  - name: repositoryName
+    argn: "?"
+    help: "Name of the repository to create"
+
+optional:
+  - name: noRedirect
+    short: no-r
+    action: store_true
+    help: "If specified, browser page with predefined scopes will be opened to create a token"
