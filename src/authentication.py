@@ -39,5 +39,5 @@ class AuthenticationProvider:
     def get_auth_token_if_exists(self):
         pass
 
-    def on_bad_credentials(self) -> str:
+    def auth(self) -> str:
         pass

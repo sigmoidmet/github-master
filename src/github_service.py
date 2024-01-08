@@ -12,7 +12,7 @@ class GithubService:
         token = authentication_provider.get_auth_token_if_exists()
 
         if token is None:
-            token = authentication_provider.on_bad_credentials()
+            token = authentication_provider.auth()
 
         self.activate_github(token)
 
@@ -26,7 +26,7 @@ class GithubService:
         except BadCredentialsException as e:
             if attempts > self.__max_login_attempts:
                 raise e
-            token = self.__authenticationProvider.on_bad_credentials()
+            token = self.__authenticationProvider.auth()
             self.activate_github(token)
             self.__do_action(action, attempts + 1)
 

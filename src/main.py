@@ -15,7 +15,7 @@ class CommandLineAuthenticationProvider(AuthenticationProvider):
     def get_auth_token_if_exists(self):
         return self.__authentication_service.get_auth_token_if_exists()
 
-    def on_bad_credentials(self) -> str:
+    def auth(self) -> str:
         if self.redirect:
             self.send_to_auth_page()
 
@@ -41,10 +41,11 @@ if __name__ == "__main__":
         parser.error("You need to provide repositoryName argument to create it")
 
     authentication_service = AuthenticationService()
-    githubService = GithubService(CommandLineAuthenticationProvider(authentication_service, not args.noRedirect))
+    authentication_provider = CommandLineAuthenticationProvider(authentication_service, not args.noRedirect)
+    githubService = GithubService(authentication_provider)
 
     if args.command == 'create':
         githubService.create_repository(args.repositoryName)
         print(f"Repository {args.repositoryName} successfully created.")
-    else:
-        print("Sorry, we don't support this yet")
+    elif args.command == 'auth':
+        authentication_provider.auth()

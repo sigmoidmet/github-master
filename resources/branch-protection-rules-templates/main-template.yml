@@ -1,7 +1,7 @@
 name: main
 protection:
   require-pull-request: true
-  approvals: 2
+  approvals: 1
   dismiss-stale-approvals: true
   require-approve-from-code-owner: true
   conversation-resolution-before-merging: true
